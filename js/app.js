@@ -1,89 +1,3 @@
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Garage WOD">
-<meta name="application-name" content="Garage WOD">
-<meta name="theme-color" content="#1a1917">
-<meta name="description" content="Garage WOD är en offlinevänlig WOD-generator för hemmagym.">
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./assets/icons/icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="./assets/icons/icon-512.png">
-<link rel="stylesheet" href="./css/style.css">
-<title>Garage WOD</title>
-</head>
-<body>
-<div class="wrap">
-  <p class="eyebrow">Hemmagym &middot; Onsala</p>
-  <h1>Garage WOD Generator</h1>
-
-  <div class="equipment">
-    <span class="chip">Skivstång</span>
-    <span class="chip">Hantlar 2×6/8/10kg</span>
-    <span class="chip">Kettlebell 12–28kg</span>
-    <span class="chip">Battlerope 9kg</span>
-    <span class="chip">Ringar</span>
-  </div>
-  <p class="install-hint" id="installHint">Tips i Safari på iPhone: Dela → Lägg till på hemskärmen.</p>
-
-  <div class="layout">
-    <div class="panel controls">
-      <label class="section-label" for="formatSelect">Format</label>
-      <select id="formatSelect">
-        <option value="RANDOM">Slumpat</option>
-        <option value="AMRAP">AMRAP</option>
-        <option value="EMOM">EMOM</option>
-        <option value="FOR TIME">For Time</option>
-        <option value="CHIPPER">Chipper</option>
-      </select>
-      <button id="pull">Dra ett pass</button>
-    </div>
-
-    <div class="panel output">
-      <div class="timer-panel" id="timerPanel">
-        <p class="timer-label" id="timerLabel">Tid kvar</p>
-        <p class="timer-digits" id="timerDigits">00:00</p>
-        <div class="timer-progress"><div class="timer-progress-bar" id="timerBar"></div></div>
-        <div class="timer-buttons">
-          <button id="startBtn">Starta</button>
-          <button id="resetBtn">Nollställ</button>
-        </div>
-        <p class="timer-hint">Tryck <kbd>mellanslag</kbd> för start/paus, <kbd>R</kbd> för nollställ</p>
-      </div>
-
-      <div class="card" id="card">
-        <p class="format-label" id="formatLabel">Format</p>
-        <p class="format-name" id="formatName">—</p>
-        <p class="format-detail" id="formatDetail"></p>
-
-        <p class="section-label">Uppvärmning</p>
-        <p class="warmup" id="warmup"></p>
-
-        <div id="strengthBlock" style="display:none;">
-          <p class="section-label">Styrka</p>
-          <p class="strength" id="strength"></p>
-        </div>
-
-        <p class="section-label" id="wodLabel">Passet</p>
-        <ul class="movement-list" id="movementList"></ul>
-
-        <p class="note" id="note"></p>
-
-        <div class="action-row" id="actionRow">
-          <button id="copyBtn">Kopiera passet</button>
-          <button id="fullscreenBtn">Full skärm</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
 const BARBELL = [
   {name:"Marklyft", tag:"Skivstång", desc:"Lyft stången från golvet till stående med rak rygg, driv med höfterna."},
   {name:"Frontböj", tag:"Skivstång", desc:"Knäböj med stången vilande på axlarna framtill, armbågarna högt."},
@@ -493,6 +407,7 @@ document.getElementById('pull').addEventListener('click', () => {
   const forced = formatSelect.value;
   const workout = buildWorkout(forced);
   currentWorkout = workout;
+  saveWorkout(workout);
   card.classList.add('show');
   actionRow.classList.add('show');
   formatLabel.textContent = "Format";
@@ -516,7 +431,45 @@ document.getElementById('pull').addEventListener('click', () => {
     renderMovements(workout.movements, false);
   });
 });
-</script>
-<script src="./js/app.js" defer></script>
-</body>
-</html>
+
+// ---- PWA install hint & service worker ----
+(function registerServiceWorker(){
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    });
+  }
+})();
+
+// ---- Basic local persistence ----
+const STORAGE_KEY = 'garage-wod:last-workout:v1';
+function saveWorkout(workout){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(workout)); } catch(e) {}
+}
+function restoreWorkout(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const workout = JSON.parse(raw);
+    if(!workout || !workout.movements) return;
+    currentWorkout = workout;
+    card.classList.add('show');
+    actionRow.classList.add('show');
+    formatLabel.textContent = 'Format';
+    formatName.textContent = workout.format;
+    formatDetail.textContent = workout.detail;
+    warmupEl.textContent = workout.warmup;
+    noteEl.textContent = workout.note;
+    if(workout.strength){
+      strengthBlock.style.display = 'block';
+      strengthEl.innerHTML = `<strong>${workout.strength.name}</strong> — ${workout.strength.scheme}<br><span class="mv-desc" style="margin-top:6px;">${workout.strength.desc || ''}</span>`;
+    } else {
+      strengthBlock.style.display = 'none';
+    }
+    wodLabel.textContent = workout.format === 'EMOM' ? 'EMOM — rotera' : 'Passet';
+    setTimerFromWorkout(workout);
+    renderMovements(workout.movements, false);
+  } catch(e) {}
+}
+
+window.addEventListener('load', restoreWorkout);
