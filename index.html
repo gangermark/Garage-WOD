@@ -34,10 +34,12 @@
   <div class="layout">
     <div class="panel controls">
       <label class="section-label" for="formatSelect">Format</label>
-<select id="equipmentSelect">
-  <option value="ALL">All utrustning</option>
-  <option value="BODYWEIGHT">Endast kroppsvikt</option>
-  <option value="TRAVEL">Reseläge</option>
+<select id="formatSelect">
+  <option value="RANDOM">Slumpat</option>
+  <option value="AMRAP">AMRAP</option>
+  <option value="EMOM">EMOM</option>
+  <option value="FOR TIME">For Time</option>
+  <option value="CHIPPER">Chipper</option>
 </select>
 
       <label class="section-label" for="equipmentSelect">Utrustning</label>
@@ -59,8 +61,6 @@
           <button id="startBtn">Starta</button>
           <button id="resetBtn">Nollställ</button>
         </div>
-        <p class="timer-hint">Tryck <kbd>mellanslag</kbd> för start/paus, <kbd>R</kbd> för nollställ</p>
-      </div>
 
       <div class="card" id="card">
         <p class="format-label" id="formatLabel">Format</p>

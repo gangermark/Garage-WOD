@@ -68,6 +68,17 @@ const BODYWEIGHT = [
 ];
 
 const ALL_POOLS = [BARBELL, DUMBBELL, KETTLEBELL, ROPE, RINGS, BODYWEIGHT, RUNNING];
+function getAllowedPools(equipmentMode) {
+  if (equipmentMode === 'BODYWEIGHT') {
+    return [BODYWEIGHT];
+  }
+
+  if (equipmentMode === 'TRAVEL') {
+    return [BODYWEIGHT, RUNNING];
+  }
+
+  return ALL_POOLS;
+}
 
 const WARMUPS = [
   "5 min lätt hopprep eller jogging på stället, sedan armcirklar + höftrotationer.",
@@ -104,12 +115,17 @@ function resolveTag(m){
   return m.tagFn ? m.tagFn() : m.tag;
 }
 
-function pickMovements(count, excludePools){
-  const sourcePools = excludePools ? ALL_POOLS.filter(p => !excludePools.includes(p)) : ALL_POOLS;
+function pickMovements(count, excludePools, equipmentMode = 'ALL') {
+  const allowedPools = getAllowedPools(equipmentMode);
+  const sourcePools = excludePools
+    ? allowedPools.filter(p => !excludePools.includes(p))
+    : allowedPools;
+
   const pools = pickN(sourcePools, Math.min(count, sourcePools.length));
+
   return pools.map(p => {
     const m = pick(p);
-    return {name: m.name, tag: resolveTag(m), desc: m.desc};
+    return { name: m.name, tag: resolveTag(m), desc: m.desc };
   });
 }
 
@@ -137,11 +153,11 @@ function repsFor(name, format){
   return randEven(8,12)+" reps";
 }
 
-function buildWorkout(forcedFormat){
+function buildWorkout(forcedFormat, equipmentMode = 'ALL'){
   const formats = ["AMRAP","EMOM","FOR TIME","CHIPPER"];
   const format = (forcedFormat && forcedFormat !== "RANDOM") ? forcedFormat : pick(formats);
 
-  const includeStrength = Math.random() < 0.35 && format !== "CHIPPER";
+const includeStrength = equipmentMode === 'ALL' && Math.random() < 0.35 && format !== "CHIPPER";
   const strength = includeStrength ? pick(STRENGTH_ONLY) : null;
   const heavyStrength = strength && strength.scheme.includes("5×5");
 
@@ -152,7 +168,7 @@ function buildWorkout(forcedFormat){
     const minutes = heavyStrength ? pick([12,14,16]) : pick([20,22,24,26]);
     detail = `${minutes} min — så många ronder/reps som möjligt`;
     movementCount = 3;
-    movements = pickMovements(movementCount).map(m => ({...m, reps: repsFor(m.name,format)}));
+movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));
     timerMode = "countdown";
     timerSeconds = minutes*60;
   } else if(format==="EMOM"){
@@ -160,21 +176,18 @@ function buildWorkout(forcedFormat){
     const stationCount = pick([3,4]);
     detail = `${totalMinutes} min totalt, rotera ${stationCount} stationer minutvis`;
     movementCount = stationCount;
-    movements = pickMovements(movementCount, [RUNNING]).map(m => ({...m, reps: repsFor(m.name,format)}));
-    timerMode = "countdown";
+movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countdown";
     timerSeconds = totalMinutes*60;
   } else if(format==="FOR TIME"){
     const rounds = pick([3,4,5]);
     detail = `${rounds} ronder, notera din tid`;
     movementCount = 3;
-    movements = pickMovements(movementCount).map(m => ({...m, reps: repsFor(m.name,format)}));
-    timerMode = "countup";
+movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countup";
     timerSeconds = 0;
   } else { // CHIPPER
     detail = "1 runda genom listan, sikta ca 25–35 min, notera din tid";
     movementCount = pick([6,7]);
-    movements = pickMovements(movementCount).map(m => ({...m, reps: repsFor(m.name,format)}));
-    timerMode = "countup";
+movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countup";
     timerSeconds = 0;
   }
 
@@ -201,6 +214,7 @@ const movementList = document.getElementById('movementList');
 const noteEl = document.getElementById('note');
 const wodLabel = document.getElementById('wodLabel');
 const formatSelect = document.getElementById('formatSelect');
+const equipmentSelect = document.getElementById('equipmentSelect');
 const actionRow = document.getElementById('actionRow');
 const copyBtn = document.getElementById('copyBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -405,8 +419,9 @@ if(isStandalone || !fullscreenSupported){
 
 // ---- Generate ----
 document.getElementById('pull').addEventListener('click', () => {
-  const forced = formatSelect.value;
-  const workout = buildWorkout(forced);
+const forced = formatSelect.value;
+const equipmentMode = equipmentSelect.value;
+const workout = buildWorkout(forced, equipmentMode);
   currentWorkout = workout;
   saveWorkout(workout);
   card.classList.add('show');
