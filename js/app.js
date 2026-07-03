@@ -1,3 +1,4 @@
+const APP_VERSION = "2.0.0-dev";
 const BARBELL = [
   {name:"Marklyft", tag:"Skivstång", desc:"Lyft stången från golvet till stående med rak rygg, driv med höfterna."},
   {name:"Frontböj", tag:"Skivstång", desc:"Knäböj med stången vilande på axlarna framtill, armbågarna högt."},
