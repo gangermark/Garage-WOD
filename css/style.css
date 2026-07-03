@@ -94,25 +94,26 @@ h1{
   display:block;
 }
 
-select#formatSelect{
-  width:100%;
-  font-family:'Oswald',sans-serif;
-  font-weight:500;
-  font-size:16px;
-  color:var(--chalk);
-  background:var(--surface-2);
-  border:1px solid var(--line);
-  border-radius:4px;
-  padding:14px 40px 14px 14px;
-  margin-bottom:18px;
-  appearance:none;
-  -webkit-appearance:none;
-  cursor:pointer;
-  min-height:48px;
-  touch-action:manipulation;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1L7 7L13 1' stroke='%23a8a49a' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat:no-repeat;
-  background-position:right 14px center;
+select#formatSelect,
+select#equipmentSelect {
+  width: 100%;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--chalk);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 40px 14px 14px;
+  margin-bottom: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  min-height: 48px;
+  touch-action: manipulation;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1L7 7L13 1' stroke='%23a8a49a' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
 
 button#pull{
@@ -345,3 +346,21 @@ button#pull:hover{background:#d34e33;}
 .install-hint{display:none;margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--steel);line-height:1.45;}
 .install-hint.show{display:block;}
 @media (display-mode: standalone){.install-hint{display:none!important;}}
+
+#equipmentSelect {
+  width: 100%;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--chalk);
+  background-color: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 40px 14px 14px;
+  margin-bottom: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  min-height: 48px;
+  touch-action: manipulation;
+}
