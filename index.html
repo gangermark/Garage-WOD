@@ -53,45 +53,46 @@
         <button id="pull">Dra ett pass</button>
       </div>
 
-      <div class="panel output">
-        <div class="timer-panel" id="timerPanel">
-          <p class="timer-label" id="timerLabel">Tid kvar</p>
-          <p class="timer-digits" id="timerDigits">00:00</p>
-          <div class="timer-progress"><div class="timer-progress-bar" id="timerBar"></div></div>
-          <div class="timer-buttons">
-            <button id="startBtn">Starta</button>
-            <button id="resetBtn">Nollställ</button>
-          </div>
-          <p class="timer-hint">Tryck <kbd>mellanslag</kbd> för start/paus, <kbd>R</kbd> för nollställ</p>
-        </div>
-
-        <div class="card" id="card">
-          <p class="format-label" id="formatLabel">Format</p>
-          <p class="format-name" id="formatName">—</p>
-          <p class="format-detail" id="formatDetail"></p>
-
-          <p class="section-label">Uppvärmning</p>
-          <p class="warmup" id="warmup"></p>
-
-          <div id="strengthBlock" style="display:none;">
-            <p class="section-label">Styrka</p>
-            <p class="strength" id="strength"></p>
-          </div>
-
-          <p class="section-label" id="wodLabel">Passet</p>
-          <ul class="movement-list" id="movementList"></ul>
-
-          <p class="note" id="note"></p>
-
-          <div class="action-row" id="actionRow">
-            <button id="copyBtn">Kopiera passet</button>
-            <button id="fullscreenBtn">Full skärm</button>
-          </div>
-        </div>
-      </div>
+<div class="panel output">
+  <div class="timer-panel" id="timerPanel">
+    <p class="timer-label" id="timerLabel">Tid kvar</p>
+    <p class="timer-digits" id="timerDigits">00:00</p>
+    <div class="timer-progress">
+      <div class="timer-progress-bar" id="timerBar"></div>
     </div>
+    <div class="timer-buttons">
+      <button id="startBtn">Starta</button>
+      <button id="resetBtn">Nollställ</button>
+    </div>
+    
   </div>
 
-  <script src="./js/app.js" defer></script>
+  <div class="card" id="card">
+    <p class="format-label" id="formatLabel">Format</p>
+    <p class="format-name" id="formatName">—</p>
+    <p class="format-detail" id="formatDetail"></p>
+
+    <p class="section-label">Uppvärmning</p>
+    <p class="warmup" id="warmup"></p>
+
+    <div id="strengthBlock" style="display:none;">
+      <p class="section-label">Styrka</p>
+      <p class="strength" id="strength"></p>
+    </div>
+
+    <p class="section-label" id="wodLabel">Passet</p>
+    <ul class="movement-list" id="movementList"></ul>
+
+    <p class="note" id="note"></p>
+
+    <div class="action-row" id="actionRow">
+      <button id="copyBtn">Kopiera passet</button>
+      <button id="fullscreenBtn">Full skärm</button>
+    </div>
+  </div>
+</div>
+
+<script src="./js/workouts.js" defer></script>
+<script src="./js/app.js" defer></script>
 </body>
 </html>

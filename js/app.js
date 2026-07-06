@@ -157,52 +157,22 @@ function repsFor(name, format){
 }
 
 function buildWorkout(forcedFormat, equipmentMode = "ALL") {
+  // Select a workout from the WORKOUTS database matching format and equipmentMode
   const formats = ["AMRAP","EMOM","FOR TIME","CHIPPER"];
-  const format = (forcedFormat && forcedFormat !== "RANDOM") ? forcedFormat : pick(formats);
+  const format = (forcedFormat && forcedFormat !== "RANDOM") ? forcedFormat : null;
 
-const includeStrength = equipmentMode === 'ALL' && Math.random() < 0.35 && format !== "CHIPPER";
-  const strength = includeStrength ? pick(STRENGTH_ONLY) : null;
-  const heavyStrength = strength && strength.scheme.includes("5×5");
+  // Filter by format (if provided) and by equipmentMode inclusion
+  const candidates = (Array.isArray(WORKOUTS) ? WORKOUTS : []).filter(w => {
+    const formatMatch = format ? w.format === format : true;
+    const equipmentMatch = Array.isArray(w.equipmentMode) ? w.equipmentMode.includes(equipmentMode) : false;
+    return formatMatch && equipmentMatch;
+  });
 
-  let detail = "";
-  let movementCount, movements, timerSeconds = 0, timerMode = "countup";
+  if(!candidates.length) return null;
 
-  if(format==="AMRAP"){
-    const minutes = heavyStrength ? pick([12,14,16]) : pick([20,22,24,26]);
-    detail = `${minutes} min — så många ronder/reps som möjligt`;
-    movementCount = 3;
-movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));
-    timerMode = "countdown";
-    timerSeconds = minutes*60;
-  } else if(format==="EMOM"){
-    const totalMinutes = heavyStrength ? pick([12,14,16]) : pick([12,14,16,18,20]);
-    const stationCount = pick([3,4]);
-    detail = `${totalMinutes} min totalt, rotera ${stationCount} stationer minutvis`;
-    movementCount = stationCount;
-movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countdown";
-    timerSeconds = totalMinutes*60;
-  } else if(format==="FOR TIME"){
-    const rounds = pick([3,4,5]);
-    detail = `${rounds} ronder, notera din tid`;
-    movementCount = 3;
-movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countup";
-    timerSeconds = 0;
-  } else { // CHIPPER
-    detail = "1 runda genom listan, sikta ca 25–35 min, notera din tid";
-    movementCount = pick([6,7]);
-movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countup";
-    timerSeconds = 0;
-  }
-  return {
-    format,
-    detail,
-    movements,
-    strength,
-    warmup: pick(WARMUPS),
-    note: pick(NOTES),
-    timerMode,
-    timerSeconds,
-  };
+  const chosen = pick(candidates);
+  // return a deep copy so callers can modify without touching the DB
+  return JSON.parse(JSON.stringify(chosen));
 }
 
 const card = document.getElementById('card');
@@ -425,6 +395,11 @@ document.getElementById('pull').addEventListener('click', () => {
 const forced = formatSelect.value;
 const equipmentMode = equipmentSelect.value;
 const workout = buildWorkout(forced, equipmentMode);
+console.log("Selected workout from database:", workout);
+  if(!workout){
+    alert('Inga workouts matchar dina filter. Välj annat format eller utrustning.');
+    return;
+  }
   currentWorkout = workout;
   saveWorkout(workout);
   card.classList.add('show');
@@ -445,10 +420,8 @@ const workout = buildWorkout(forced, equipmentMode);
 
   setTimerFromWorkout(workout);
 
-  rollAnimation(workout, equipmentMode, () => {
-    formatName.textContent = workout.format;
-    renderMovements(workout.movements, false);
-  });
+formatName.textContent = workout.format;
+renderMovements(workout.movements, false);
 });
 
 // ---- PWA install hint & service worker ----
