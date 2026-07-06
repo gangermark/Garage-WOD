@@ -69,14 +69,9 @@ const BODYWEIGHT = [
 
 const ALL_POOLS = [BARBELL, DUMBBELL, KETTLEBELL, ROPE, RINGS, BODYWEIGHT, RUNNING];
 function getAllowedPools(equipmentMode) {
-  if (equipmentMode === 'BODYWEIGHT') {
-    return [BODYWEIGHT];
-  }
-
-  if (equipmentMode === 'TRAVEL') {
-    return [BODYWEIGHT, RUNNING];
-  }
-
+  const mode = String(equipmentMode || '').toUpperCase();
+  if (mode === 'BODYWEIGHT') return [BODYWEIGHT];
+  if (mode === 'TRAVEL') return [BODYWEIGHT, RUNNING];
   return ALL_POOLS;
 }
 
@@ -115,18 +110,26 @@ function resolveTag(m){
   return m.tagFn ? m.tagFn() : m.tag;
 }
 
-function pickMovements(count, excludePools, equipmentMode = 'ALL') {
-  const allowedPools = getAllowedPools(equipmentMode);
-  const sourcePools = excludePools
-    ? allowedPools.filter(p => !excludePools.includes(p))
+function pickMovements(count, excludePools = null, equipmentMode = 'ALL') {
+  // 1) get allowed pools for the mode
+  const allowedPools = getAllowedPools(equipmentMode) || ALL_POOLS;
+
+  // 2) apply excludePools if provided (excludePools expected to be array of pool references)
+  const sourcePools = Array.isArray(excludePools) && excludePools.length
+    ? allowedPools.filter(pool => !excludePools.includes(pool))
     : allowedPools;
 
-  const pools = pickN(sourcePools, Math.min(count, sourcePools.length));
+  // 3) flatten pools into a single array of movement objects
+  const movementList = sourcePools.reduce((acc, pool) => {
+    if (Array.isArray(pool)) return acc.concat(pool);
+    return acc;
+  }, []);
 
-  return pools.map(p => {
-    const m = pick(p);
-    return { name: m.name, tag: resolveTag(m), desc: m.desc };
-  });
+  // 4) randomly select `count` unique movements from the flattened array
+  const selected = pickN(movementList, Math.min(count, movementList.length));
+
+  // 5) return movement objects with resolved tags
+  return selected.map(m => ({ name: m.name, tag: resolveTag(m), desc: m.desc }));
 }
 
 function repsFor(name, format){
@@ -153,7 +156,7 @@ function repsFor(name, format){
   return randEven(8,12)+" reps";
 }
 
-function buildWorkout(forcedFormat, equipmentMode = 'ALL'){
+function buildWorkout(forcedFormat, equipmentMode = "ALL") {
   const formats = ["AMRAP","EMOM","FOR TIME","CHIPPER"];
   const format = (forcedFormat && forcedFormat !== "RANDOM") ? forcedFormat : pick(formats);
 
@@ -190,7 +193,6 @@ movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, r
 movements = pickMovements(movementCount, null, equipmentMode).map(m => ({...m, reps: repsFor(m.name,format)}));    timerMode = "countup";
     timerSeconds = 0;
   }
-
   return {
     format,
     detail,
@@ -245,12 +247,13 @@ function renderMovements(movements, rolling){
   });
 }
 
-function rollAnimation(finalWorkout, cb){
+function rollAnimation(finalWorkout, equipmentMode, cb){
   let ticks = 0;
   const maxTicks = 9;
-  const exclude = finalWorkout.format === "EMOM" ? [RUNNING] : null;
+  // Only exclude running during EMOM when we're using ALL equipment pools
+  const exclude = (finalWorkout.format === "EMOM" && equipmentMode === 'ALL') ? [RUNNING] : null;
   const interval = setInterval(() => {
-    const fake = pickMovements(finalWorkout.movements.length, exclude).map(m => ({...m, reps: repsFor(m.name, finalWorkout.format)}));
+    const fake = pickMovements(finalWorkout.movements.length, exclude, equipmentMode).map(m => ({...m, reps: repsFor(m.name, finalWorkout.format)}));
     formatName.textContent = finalWorkout.format;
     renderMovements(fake, true);
     ticks++;
@@ -442,7 +445,7 @@ const workout = buildWorkout(forced, equipmentMode);
 
   setTimerFromWorkout(workout);
 
-  rollAnimation(workout, () => {
+  rollAnimation(workout, equipmentMode, () => {
     formatName.textContent = workout.format;
     renderMovements(workout.movements, false);
   });
