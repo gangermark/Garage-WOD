@@ -23,3 +23,4 @@ Installerbar PWA-version av Garage WOD Generator.
 ## Uppdatera appen
 
 När du ändrar filer, öka gärna `CACHE_NAME` i `service-worker.js`, t.ex. från `garage-wod-v2.0.0` till `garage-wod-v2.0.1`.
+Deployment refresh
