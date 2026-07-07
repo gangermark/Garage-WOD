@@ -156,14 +156,21 @@ function repsFor(name, format){
 }
 
 function buildWorkout(forcedFormat, equipmentMode = "ALL") {
-  // Select a workout from the WORKOUTS database matching format and equipmentMode
+  // Select a workout from the WORKOUTS database matching format and equipment selection
   const formats = ["AMRAP","EMOM","FOR TIME","CHIPPER"];
   const format = (forcedFormat && forcedFormat !== "RANDOM") ? forcedFormat : null;
 
-  // Filter by format (if provided) and by equipmentMode inclusion
+  // Filter by format (if provided) and by equipment availability
   const candidates = (Array.isArray(WORKOUTS) ? WORKOUTS : []).filter(w => {
     const formatMatch = format ? w.format === format : true;
-    const equipmentMatch = Array.isArray(w.equipmentMode) ? w.equipmentMode.includes(equipmentMode) : false;
+    const equipmentMatch = (() => {
+      if (String(equipmentMode || '').toUpperCase() === 'BODYWEIGHT') {
+        return Array.isArray(w.equipment)
+          && w.equipment.length > 0
+          && w.equipment.every(item => item === 'BODYWEIGHT');
+      }
+      return true;
+    })();
     return formatMatch && equipmentMatch;
   });
 
