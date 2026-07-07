@@ -71,7 +71,6 @@ const ALL_POOLS = [BARBELL, DUMBBELL, KETTLEBELL, ROPE, RINGS, BODYWEIGHT, RUNNI
 function getAllowedPools(equipmentMode) {
   const mode = String(equipmentMode || '').toUpperCase();
   if (mode === 'BODYWEIGHT') return [BODYWEIGHT];
-  if (mode === 'TRAVEL') return [BODYWEIGHT, RUNNING];
   return ALL_POOLS;
 }
 
