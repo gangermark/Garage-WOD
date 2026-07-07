@@ -33,8 +33,171 @@ const WORKOUTS = [
       }
     ],
     note: "Håll ett jämnt tempo genom hela passet."
-  }
-  ,
+  },
+  {
+    id: "amrap-bodyweight-002",
+    format: "AMRAP",
+    name: "Core & Cardio Flow",
+    difficulty: "MEDIUM",
+    duration: 15,
+    focus: ["CONDITIONING", "CORE"],
+    equipment: ["BODYWEIGHT"],
+    workoutType: "DATABASE",
+    detail: "15 min — så många ronder/reps som möjligt",
+    timerMode: "countdown",
+    timerSeconds: 900,
+    warmup: "4 min lätt jogging och mobilitet för höfter och axlar.",
+    movements: [
+      {
+        name: "Air squats",
+        tag: "Kroppsvikt",
+        reps: "12 reps",
+        desc: "Knäböj till kroppsvikt."
+      },
+      {
+        name: "Mountain climbers",
+        tag: "Kroppsvikt",
+        reps: "20 sek",
+        desc: "Stå i plankan och växla knädrag i högt tempo."
+      },
+      {
+        name: "Sit-ups",
+        tag: "Kroppsvikt",
+        reps: "10 reps",
+        desc: "Situps från liggande till sittande."
+      }
+    ],
+    note: "Håll ett jämnt tempo och behåll tekniken."
+  },
+  {
+    id: "amrap-bodyweight-003",
+    format: "AMRAP",
+    name: "Upper Body Grinder",
+    difficulty: "HARD",
+    duration: 18,
+    focus: ["CONDITIONING", "UPPER_BODY"],
+    equipment: ["BODYWEIGHT"],
+    workoutType: "DATABASE",
+    detail: "18 min — så många ronder/reps som möjligt",
+    timerMode: "countdown",
+    timerSeconds: 1080,
+    warmup: "5 min lätt jogging och rörlighet för axlar, bröst och rygg.",
+    movements: [
+      {
+        name: "Push-ups",
+        tag: "Kroppsvikt",
+        reps: "10 reps",
+        desc: "Armhävningar med kroppen rak."
+      },
+      {
+        name: "Jumping lunges",
+        tag: "Kroppsvikt",
+        reps: "10 reps/sida",
+        desc: "Utfallshopp där du byter ben i luften."
+      },
+      {
+        name: "Burpees",
+        tag: "Kroppsvikt",
+        reps: "6 reps",
+        desc: "Från stående ner till marken och upp igen."
+      },
+      {
+        name: "Sit-ups",
+        tag: "Kroppsvikt",
+        reps: "12 reps",
+        desc: "Situps från liggande till sittande."
+      }
+    ],
+    note: "Jobba jämnt och ta korta pauser om det behövs."
+  },
+  {
+    id: "amrap-bodyweight-004",
+    format: "AMRAP",
+    name: "Tempo Ladder",
+    difficulty: "MEDIUM",
+    duration: 16,
+    focus: ["CONDITIONING", "ENDURANCE"],
+    equipment: ["BODYWEIGHT"],
+    workoutType: "DATABASE",
+    detail: "16 min — så många ronder/reps som möjligt",
+    timerMode: "countdown",
+    timerSeconds: 960,
+    warmup: "4 min lätt jogg samt dynamisk rörlighet för höfter och anklar.",
+    movements: [
+      {
+        name: "Löpning",
+        tag: "Konditionsslinga",
+        reps: "200 m",
+        desc: "Lätt löpning på plats eller utomhus."
+      },
+      {
+        name: "Air squats",
+        tag: "Kroppsvikt",
+        reps: "15 reps",
+        desc: "Knäböj till kroppsvikt."
+      },
+      {
+        name: "Mountain climbers",
+        tag: "Kroppsvikt",
+        reps: "25 sek",
+        desc: "Stå i plankan och växla knädrag i högt tempo."
+      },
+      {
+        name: "Push-ups",
+        tag: "Kroppsvikt",
+        reps: "8 reps",
+        desc: "Armhävningar med kroppen rak."
+      }
+    ],
+    note: "Spara lite kraft till slutet och håll ett stabilt tempo."
+  },
+  {
+    id: "amrap-bodyweight-005",
+    format: "AMRAP",
+    name: "Power & Core Circuit",
+    difficulty: "HARD",
+    duration: 22,
+    focus: ["CONDITIONING", "POWER"],
+    equipment: ["BODYWEIGHT"],
+    workoutType: "DATABASE",
+    detail: "22 min — så många ronder/reps som möjligt",
+    timerMode: "countdown",
+    timerSeconds: 1320,
+    warmup: "5 min lätt jogging och uppvärmning med hopprep och plankan.",
+    movements: [
+      {
+        name: "Jumping lunges",
+        tag: "Kroppsvikt",
+        reps: "12 reps/sida",
+        desc: "Utfallshopp där du byter ben i luften."
+      },
+      {
+        name: "Burpees",
+        tag: "Kroppsvikt",
+        reps: "8 reps",
+        desc: "Från stående ner till marken och upp igen."
+      },
+      {
+        name: "Push-ups",
+        tag: "Kroppsvikt",
+        reps: "12 reps",
+        desc: "Armhävningar med kroppen rak."
+      },
+      {
+        name: "Mountain climbers",
+        tag: "Kroppsvikt",
+        reps: "30 sek",
+        desc: "Stå i plankan och växla knädrag i högt tempo."
+      },
+      {
+        name: "Sit-ups",
+        tag: "Kroppsvikt",
+        reps: "15 reps",
+        desc: "Situps från liggande till sittande."
+      }
+    ],
+    note: "Sätt ett jämnt tempo och undvik att rusa in i för högt tempo."
+  },
   {
     id: "emom-bodyweight-001",
     format: "EMOM",
