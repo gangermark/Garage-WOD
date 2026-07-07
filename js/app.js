@@ -431,10 +431,16 @@ renderMovements(workout.movements, false);
 });
 
 // ---- PWA install hint & service worker ----
+// ---- PWA install hint & service worker ----
 (function registerServiceWorker(){
-  if('serviceWorker' in navigator){
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  const isLocalDev =
+    location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+  if (isLocalDev) return;
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js").catch(() => {});
     });
   }
 })();
