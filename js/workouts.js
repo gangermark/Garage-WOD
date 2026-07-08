@@ -712,7 +712,7 @@ const WORKOUTS = [
     difficulty: "HARD",
     duration: 15,
     focus: ["CONDITIONING", "STABILITY"],
-    equipment: ["BATTLE_ROPE", "BENCH", "BODYWEIGHT"]
+    equipment: ["BATTLE_ROPE", "BENCH", "BODYWEIGHT"],
     workoutType: "DATABASE",
     detail: "15 min totalt, rotera 3 stationer minutvis",
     timerMode: "countdown",
