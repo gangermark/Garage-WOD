@@ -246,6 +246,17 @@ button#pull:hover{background:#d34e33;}
   text-transform:uppercase;
   margin:0 0 4px;
 }
+.workout-name{
+  display:none;
+  font-family:'Oswald',sans-serif;
+  font-weight:600;
+  font-size:clamp(18px,3.2vw,22px);
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  color:var(--chalk);
+  margin:0 0 10px;
+  line-height:1.15;
+}
 .format-name{
   font-family:'Oswald',sans-serif;
   font-weight:700;
