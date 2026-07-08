@@ -183,6 +183,7 @@ function buildWorkout(forcedFormat, equipmentMode = "ALL") {
 
 const card = document.getElementById('card');
 const formatLabel = document.getElementById('formatLabel');
+const workoutName = document.getElementById('workoutName');
 const formatName = document.getElementById('formatName');
 const formatDetail = document.getElementById('formatDetail');
 const warmupEl = document.getElementById('warmup');
@@ -205,6 +206,17 @@ const startBtn = document.getElementById('startBtn');
 const resetBtn = document.getElementById('resetBtn');
 
 let currentWorkout = null;
+
+function setWorkoutNameDisplay(workout){
+  if(!workoutName) return;
+  if(workout && workout.name){
+    workoutName.textContent = workout.name;
+    workoutName.style.display = 'block';
+  } else {
+    workoutName.textContent = '';
+    workoutName.style.display = 'none';
+  }
+}
 
 function renderMovements(movements, rolling){
   movementList.innerHTML = "";
@@ -411,6 +423,7 @@ console.log("Selected workout from database:", workout);
   card.classList.add('show');
   actionRow.classList.add('show');
   formatLabel.textContent = "Format";
+  setWorkoutNameDisplay(workout);
   formatDetail.textContent = workout.detail;
   warmupEl.textContent = workout.warmup;
   noteEl.textContent = workout.note;
@@ -460,6 +473,7 @@ function restoreWorkout(){
     card.classList.add('show');
     actionRow.classList.add('show');
     formatLabel.textContent = 'Format';
+    setWorkoutNameDisplay(workout);
     formatName.textContent = workout.format;
     formatDetail.textContent = workout.detail;
     warmupEl.textContent = workout.warmup;
