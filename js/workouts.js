@@ -553,7 +553,7 @@ const WORKOUTS = [
     movements: [
       { name: "Dumbbell floor presses", tag: "Dumbbell", reps: "10 reps", desc: "Tryck hantlarna upp från golvet med kontroll." },
       { name: "Dumbbell rows", tag: "Dumbbell", reps: "10 reps", desc: "Dra hantlarna mot sidan av kroppen med rak rygg." },
-      { name: "Jump rope", tag: "Jump rope", reps: "100 m", desc: "Hoppa med en jämn takt och aktiv core." },
+      { name: "Jump rope", tag: "Jump rope", reps: "100 reps", desc: "Hoppa med en jämn takt och aktiv core." },
       { name: "Push-ups", tag: "Kroppsvikt", reps: "8 reps", desc: "Armhävningar med kroppen rak." }
     ],
     note: "Jobba med ett jämnt tempo och behåll kontrollen i varje repetition."
@@ -699,7 +699,7 @@ const WORKOUTS = [
     timerSeconds: 12 * 60,
     warmup: "4 min lätt jogging och dynamisk rörlighet för höfter och anklar.",
     movements: [
-      { name: "Jump rope", tag: "Jump rope", reps: "60 sek", desc: "Hoppa med en jämn takt och aktiv core." },
+      { name: "Jump rope", tag: "Jump rope", reps: "45 sek", desc: "Hoppa med en jämn takt och aktiv core." },
       { name: "Air squats", tag: "Kroppsvikt", reps: "12 reps", desc: "Knäböj till kroppsvikt." },
       { name: "Push-ups", tag: "Kroppsvikt", reps: "8 reps", desc: "Armhävningar med kroppen rak." }
     ],
@@ -712,7 +712,7 @@ const WORKOUTS = [
     difficulty: "HARD",
     duration: 15,
     focus: ["CONDITIONING", "STABILITY"],
-    equipment: ["BATTLE_ROPE", "BODYWEIGHT"],
+    equipment: ["BATTLE_ROPE", "BENCH", "BODYWEIGHT"]
     workoutType: "DATABASE",
     detail: "15 min totalt, rotera 3 stationer minutvis",
     timerMode: "countdown",
@@ -774,12 +774,12 @@ const WORKOUTS = [
     focus: ["CONDITIONING", "ENDURANCE"],
     equipment: ["DUMBBELL", "JUMP_ROPE", "BODYWEIGHT"],
     workoutType: "DATABASE",
-    detail: "5 ronder av 100 meter jump rope, 8 dumbbell floor presses och 10 air squats, fullfölj varje rond innan du går vidare",
+    detail: "5 ronder av 100 reps jump rope, 8 dumbbell floor presses och 10 air squats, fullfölj varje rond innan du går vidare",
     timerMode: "countup",
     timerSeconds: 0,
     warmup: "4 min lätt jogging och mobilitet för axlar, handleder och höfter.",
     movements: [
-      { name: "Jump rope", tag: "Jump rope", reps: "100 m", desc: "Hoppa med en jämn takt och aktiv core." },
+      { name: "Jump rope", tag: "Jump rope", reps: "100 reps", desc: "Hoppa med en jämn takt och aktiv core." },
       { name: "Dumbbell floor presses", tag: "Dumbbell", reps: "8 reps", desc: "Tryck hantlarna upp från golvet med kontroll." },
       { name: "Air squats", tag: "Kroppsvikt", reps: "10 reps", desc: "Knäböj till kroppsvikt." }
     ],
@@ -880,12 +880,12 @@ const WORKOUTS = [
     focus: ["CONDITIONING", "ENDURANCE"],
     equipment: ["DUMBBELL", "JUMP_ROPE", "BODYWEIGHT"],
     workoutType: "DATABASE",
-    detail: "1 runda genom listan, sikta ca 14–16 min, notera din tid",
+    detail: "1 runda genom listan, sikta ca 8–12 min, notera din tid",
     timerMode: "countup",
     timerSeconds: 0,
     warmup: "4 min lätt jogging och mobilitet för axlar, handleder och höfter.",
     movements: [
-      { name: "Jump rope", tag: "Jump rope", reps: "150 m", desc: "Hoppa med en jämn takt och aktiv core." },
+      { name: "Jump rope", tag: "Jump rope", reps: "150", desc: "Hoppa med en jämn takt och aktiv core." },
       { name: "Dumbbell floor presses", tag: "Dumbbell", reps: "10 reps", desc: "Tryck hantlarna upp från golvet med kontroll." },
       { name: "Dumbbell rows", tag: "Dumbbell", reps: "10 reps", desc: "Dra hantlarna mot sidan av kroppen med rak rygg." },
       { name: "Air squats", tag: "Kroppsvikt", reps: "15 reps", desc: "Knäböj till kroppsvikt." },
@@ -925,7 +925,7 @@ const WORKOUTS = [
     focus: ["CONDITIONING", "ENDURANCE"],
     equipment: ["RINGS", "BODYWEIGHT"],
     workoutType: "DATABASE",
-    detail: "1 runda genom listan, sikta ca 25–30 min, notera din tid",
+    detail: "1 runda genom listan, sikta ca 15-20 min, notera din tid",
     timerMode: "countup",
     timerSeconds: 0,
     warmup: "5 min lätt jogging och rörlighet för axlar, bröst och rygg.",
