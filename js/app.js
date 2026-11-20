@@ -243,16 +243,14 @@ function chooseWorkout(){
 function movementCandidates(workout,index){
   const current=workout.movements[index];
   const available=getEquipment();
-  const pool=[...BARBELL,...DUMBBELL,...KETTLEBELL,...ROPE,...RINGS,...BODYWEIGHT,...RUNNING];
-  const tags={BARBELL:'Skivstång',DUMBBELL:'Hantlar',KETTLEBELL:'Kettlebell',BATTLE_ROPE:'Battlerope',RINGS:'Ringar',BODYWEIGHT:'Kroppsvikt'};
+  const pool=[...BARBELL,...DUMBBELL,...KETTLEBELL,...ROPE,...RINGS,...BODYWEIGHT];
   return pool.filter(m=>m.name!==current.name && !workout.movements.some(x=>x.name===m.name) &&
     (available.includes('BODYWEIGHT') && BODYWEIGHT.includes(m) ||
     available.includes('KETTLEBELL') && KETTLEBELL.includes(m) ||
     available.includes('DUMBBELL') && DUMBBELL.includes(m) ||
     available.includes('BARBELL') && BARBELL.includes(m) ||
     available.includes('RINGS') && RINGS.includes(m) ||
-    available.includes('BATTLE_ROPE') && ROPE.includes(m) ||
-    available.includes('BODYWEIGHT') && RUNNING.includes(m)));
+    available.includes('BATTLE_ROPE') && ROPE.includes(m)));
 }
 function replaceMovement(index){
   if(!currentWorkout)return;
@@ -362,6 +360,10 @@ function tick(){
     }
   } else {
     timerState.value++;
+    if(timerState.total > 0 && timerState.value >= timerState.total){
+      timerState.value = timerState.total;
+      pauseTimer();
+    }
   }
   updateTimerDisplay();
 }
@@ -418,7 +420,7 @@ function setTimerFromWorkout(workout){
   timerState.total = workout.timerSeconds;
   timerState.value = workout.timerMode === 'countdown' ? workout.timerSeconds : 0;
   timerState.running = false;
-  timerLabel.textContent = workout.timerMode === 'countdown' ? 'Tid kvar' : 'Tid';
+  timerLabel.textContent = workout.timerMode === 'countdown' ? 'Tid kvar' : 'Tid (max)';
   startBtn.textContent = 'Starta';
   timerPanel.classList.add('show');
   updateTimerDisplay();
