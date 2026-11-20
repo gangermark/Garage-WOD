@@ -1,0 +1,24 @@
+name: Garage WOD UAT
+on:
+  push:
+    branches:
+      - feature/garage-wod-2.1-hybrid
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  uat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: |
+          node --check js/app.js
+          node --check js/workouts.js
+          node --check service-worker.js
+      - name: Automated UAT regression tests
+        run: node --test tests/uat.test.mjs
