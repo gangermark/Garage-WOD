@@ -45,7 +45,7 @@ test('ingen löpning som kroppsviktsersättning',()=>{
 });
 test('tidsanpassning hanterar countup',()=>{
  const hasCountup=workouts.some(w=>w.timerMode==='countup');
- assert.ok(!hasCountup||app.includes("workout.timerMode = 'countdown'"),'Countup saknar tidsgräns');
+ assert.ok(!hasCountup||app.includes('timerState.value >= timerState.total'),'Countup saknar tidsgräns');
 });
 test('PWA cache innehåller viktiga resurser',()=>{
  for(const p of ['./index.html','./js/app.js','./js/workouts.js','./css/style.css']) assert.ok(sw.includes(p));
