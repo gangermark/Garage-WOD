@@ -1,4 +1,4 @@
-const APP_VERSION = "2.0.0-dev";
+const APP_VERSION = "2.1.0";
 const BARBELL = [
   {name:"Marklyft", tag:"Skivstång", desc:"Lyft stången från golvet till stående med rak rygg, driv med höfterna."},
   {name:"Frontböj", tag:"Skivstång", desc:"Knäböj med stången vilande på axlarna framtill, armbågarna högt."},
@@ -193,7 +193,79 @@ const movementList = document.getElementById('movementList');
 const noteEl = document.getElementById('note');
 const wodLabel = document.getElementById('wodLabel');
 const formatSelect = document.getElementById('formatSelect');
-const equipmentSelect = document.getElementById('equipmentSelect');
+const durationSelect = document.getElementById('durationSelect');
+const difficultySelect = document.getElementById('difficultySelect');
+const focusSelect = document.getElementById('focusSelect');
+const filterStatus = document.getElementById('filterStatus');
+const adaptationStatus = document.getElementById('adaptationStatus');
+const recentKey = 'garage-wod:recent:v2.1';
+const getEquipment = () => [...document.querySelectorAll('.equipment-options input:checked')].map(el => el.value);
+function getRecent(){try{return JSON.parse(localStorage.getItem(recentKey))||[]}catch{return []}}
+function rememberId(id){try{localStorage.setItem(recentKey,JSON.stringify([id,...getRecent().filter(x=>x!==id)].slice(0,10)))}catch{}}
+function chooseWorkout(){
+  const available = getEquipment();
+  const format = formatSelect.value;
+  const focus = focusSelect.value;
+  const difficulty = difficultySelect.value;
+  const requested = Number(durationSelect.value);
+  const matches = WORKOUTS.filter(w =>
+    (format === 'RANDOM' || w.format === format) &&
+    (difficulty === 'ALL' || w.difficulty === difficulty) &&
+    (focus === 'ALL' || (w.focus||[]).includes(focus)) &&
+    (w.equipment||[]).every(e=>available.includes(e))
+  );
+  if(!matches.length) return null;
+  const fresh = matches.filter(w=>!getRecent().includes(w.id));
+  const pool = fresh.length ? fresh : matches;
+  const ordered = [...pool].sort((a,b)=>Math.abs(a.duration-requested)-Math.abs(b.duration-requested));
+  const shortlist = ordered.filter(w=>Math.abs(w.duration-requested)===Math.abs(ordered[0].duration-requested));
+  const workout = JSON.parse(JSON.stringify(pick(shortlist)));
+  workout.originalId = workout.id;
+  workout.originalDuration = workout.duration;
+  workout.duration = requested;
+  workout.timerSeconds = requested*60;
+  workout.detail = workout.detail.replace(/\d+\s*min/i, requested+' min');
+  if(workout.format === 'FOR TIME' || workout.format === 'CHIPPER'){
+    const ratio = requested/Math.max(1,workout.originalDuration);
+    workout.movements.forEach(m=>{
+      const match = String(m.reps).match(/^(\d+)\s*(reps|st|varv)$/i);
+      if(match) m.reps = Math.max(2,Math.round(Number(match[1])*ratio/2)*2)+' '+match[2];
+    });
+    workout.detail += ' · Anpassad repetitionsvolym (uppskattning)';
+  } else if(workout.format === 'EMOM'){
+    workout.detail += ' · Anpassad tidslängd; rotera övningarna varje minut';
+  } else {
+    workout.detail += ' · Anpassad tidslängd';
+  }
+  rememberId(workout.id);
+  return workout;
+}
+function movementCandidates(workout,index){
+  const current=workout.movements[index];
+  const available=getEquipment();
+  const pool=[...BARBELL,...DUMBBELL,...KETTLEBELL,...ROPE,...RINGS,...BODYWEIGHT,...RUNNING];
+  const tags={BARBELL:'Skivstång',DUMBBELL:'Hantlar',KETTLEBELL:'Kettlebell',BATTLE_ROPE:'Battlerope',RINGS:'Ringar',BODYWEIGHT:'Kroppsvikt'};
+  return pool.filter(m=>m.name!==current.name && !workout.movements.some(x=>x.name===m.name) &&
+    (available.includes('BODYWEIGHT') && BODYWEIGHT.includes(m) ||
+    available.includes('KETTLEBELL') && KETTLEBELL.includes(m) ||
+    available.includes('DUMBBELL') && DUMBBELL.includes(m) ||
+    available.includes('BARBELL') && BARBELL.includes(m) ||
+    available.includes('RINGS') && RINGS.includes(m) ||
+    available.includes('BATTLE_ROPE') && ROPE.includes(m) ||
+    available.includes('BODYWEIGHT') && RUNNING.includes(m)));
+}
+function replaceMovement(index){
+  if(!currentWorkout)return;
+  const candidates=movementCandidates(currentWorkout,index);
+  if(!candidates.length){adaptationStatus.textContent='Ingen lämplig ersättning finns för vald utrustning.';return}
+  const old=currentWorkout.movements[index];
+  const samePool=candidates.filter(m=>[BARBELL,DUMBBELL,KETTLEBELL,ROPE,RINGS,BODYWEIGHT,RUNNING].some(pool=>pool.includes(m)&&pool.some(x=>x.name===old.name)));
+  const chosen=pick(samePool.length?samePool:candidates);
+  currentWorkout.movements[index]={name:chosen.name,tag:resolveTag(chosen),desc:chosen.desc,reps:old.reps};
+  adaptationStatus.textContent='Övning utbytt. Kontrollera att repetitionsantal och belastning passar.';
+  saveWorkout(currentWorkout);
+  renderMovements(currentWorkout.movements,false);
+}
 const actionRow = document.getElementById('actionRow');
 const copyBtn = document.getElementById('copyBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -231,6 +303,14 @@ function renderMovements(movements, rolling){
       </span>
       <span class="mv-reps">${m.reps}</span>
     `;
+    if(!rolling && currentWorkout){
+      const button=document.createElement('button');
+      button.type='button';button.className='swap-movement';
+      button.textContent='Byt övning';
+      button.setAttribute('aria-label','Byt '+m.name);
+      button.addEventListener('click',()=>replaceMovement(movements.indexOf(m)));
+      li.appendChild(button);
+    }
     movementList.appendChild(li);
   });
 }
@@ -410,14 +490,14 @@ if(isStandalone || !fullscreenSupported){
 
 // ---- Generate ----
 document.getElementById('pull').addEventListener('click', () => {
-const forced = formatSelect.value;
-const equipmentMode = equipmentSelect.value;
-const workout = buildWorkout(forced, equipmentMode);
+const workout = chooseWorkout();
 console.log("Selected workout from database:", workout);
   if(!workout){
-    alert('Inga workouts matchar dina filter. Välj annat format eller utrustning.');
+    filterStatus.textContent='Inga pass matchar. Prova fler utrustningstyper eller bredare fokus/intensitet.';
     return;
   }
+  filterStatus.textContent='';
+  adaptationStatus.textContent='';
   currentWorkout = workout;
   saveWorkout(workout);
   card.classList.add('show');
