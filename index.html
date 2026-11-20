@@ -35,13 +35,25 @@
           <option value="CHIPPER">Chipper</option>
         </select>
 
-        <label class="section-label" for="equipmentSelect">Utrustning</label>
-        <select id="equipmentSelect">
-          <option value="ALL">All utrustning</option>
-          <option value="BODYWEIGHT">Endast kroppsvikt</option>
-        </select>
+        
 
-        <button id="pull">Dra ett pass</button>
+        <label class="section-label" for="durationSelect">Träningstid</label>
+<select id="durationSelect"><option value="10">10 minuter</option><option value="15">15 minuter</option><option value="20" selected>20 minuter</option><option value="30">30 minuter</option><option value="40">40 minuter</option></select>
+<label class="section-label" for="difficultySelect">Intensitet</label>
+<select id="difficultySelect"><option value="ALL">Alla nivåer</option><option value="EASY">Lätt</option><option value="MEDIUM">Medel</option><option value="HARD">Hårt</option></select>
+<label class="section-label" for="focusSelect">Träningsfokus</label>
+<select id="focusSelect"><option value="ALL">Alla fokus</option><option value="CONDITIONING">Kondition</option><option value="ENDURANCE">Uthållighet</option><option value="STRENGTH">Styrka</option><option value="UPPER_BODY">Överkropp</option><option value="CORE">Bål</option></select>
+<fieldset class="equipment-options"><legend class="section-label">Tillgänglig utrustning</legend>
+<label><input type="checkbox" value="BODYWEIGHT" checked> Kroppsvikt</label>
+<label><input type="checkbox" value="KETTLEBELL" checked> Kettlebell</label>
+<label><input type="checkbox" value="DUMBBELL" checked> Hantlar</label>
+<label><input type="checkbox" value="BARBELL" checked> Skivstång</label>
+<label><input type="checkbox" value="RINGS" checked> Ringar</label>
+<label><input type="checkbox" value="JUMP_ROPE" checked> Hopprep</label>
+<label><input type="checkbox" value="BATTLE_ROPE" checked> Battlerope</label>
+<label><input type="checkbox" value="BENCH" checked> Bänk</label></fieldset>
+<p id="filterStatus" class="filter-status" role="status"></p>
+<button id="pull">Dra ett pass</button>
       </div>
 
 <div class="panel output">
@@ -73,7 +85,7 @@
     </div>
 
     <p class="section-label" id="wodLabel">Passet</p>
-    <ul class="movement-list" id="movementList"></ul>
+    <ul class="movement-list" id="movementList"></ul><p class="filter-status" id="adaptationStatus" role="status"></p>
 
     <p class="note" id="note"></p>
 
@@ -84,7 +96,7 @@
   </div>
 </div>
 
-<script src="./js/workouts.js?v=7000" defer></script>
-<script src="./js/app.js?v=7000" defer></script>
+<script src="./js/workouts.js?v=2100" defer></script>
+<script src="./js/app.js?v=2100" defer></script>
 </body>
 </html>
